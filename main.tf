@@ -2,9 +2,9 @@
 resource "aws_dynamodb_table" "users" {
   name           = "Users"
   billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "user_id"
+  hash_key       = "user"
   attribute {
-    name = "user_id"
+    name = "user"
     type = "S"
   }
 }
@@ -28,6 +28,28 @@ resource "aws_iam_role" "lambda_exec_role" {
   })
 }
 
+resource "aws_iam_policy" "function_logging_policy" {
+  name   = "function-logging-policy"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        Action : [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect : "Allow",
+        Resource : "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "function_logging_policy_attachment" {
+  role = aws_iam_role.lambda_exec_role.id
+  policy_arn = aws_iam_policy.function_logging_policy.arn
+}
+
 # IAM policy for Lambda functions to access DynamoDB
 resource "aws_iam_role_policy" "lambda_policy" {
   name   = "LambdaDynamoDBPolicy"
@@ -43,6 +65,15 @@ resource "aws_iam_role_policy" "lambda_policy" {
     ]
   })
 }
+
+resource "aws_cloudwatch_log_group" "lambda_logs" {
+  name = "/aws/lambda/register_user"
+}
+
+resource "aws_cloudwatch_log_group" "verify_user_logs" {
+  name = "/aws/lambda/verify_user"
+}
+
 
 # Lambda functions and their corresponding routes
 locals {
@@ -73,7 +104,7 @@ resource "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "lambda" {
   for_each = local.lambda_functions
 
-  function_name = "${each.key}Function"
+  function_name = "${each.key}"
   runtime       = "python3.8"
   role          = aws_iam_role.lambda_exec_role.arn
   handler       = each.value.handler
