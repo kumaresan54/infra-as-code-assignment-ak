@@ -11,3 +11,8 @@ resource "aws_s3_object" "website_files" {
   key    = each.key
   source = each.value
 }
+
+resource "aws_s3_bucket" "my_bucket_store" {
+  bucket        = "my-assignment-bucket-store-${var.prefix}"
+  force_destroy = true
+}
