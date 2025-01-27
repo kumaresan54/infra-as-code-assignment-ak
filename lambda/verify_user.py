@@ -6,7 +6,7 @@ from urllib.parse import parse_qsl
 def handler(event, context):
     s3_client = boto3.client("s3")
     try:
-        query_string = {'user': 'abc'}
+        query_string = event["queryStringParameters"]
         item_found = is_key_in_db(db_key=query_string)
         result_file = "index.html" if item_found else "error.html"
         response = s3_client.get_object(Bucket=getenv("WEBSITE_S3"), Key=result_file)

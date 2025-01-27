@@ -6,7 +6,7 @@ import json
 
 
 def handler(event, context):
-    query_string = {'user': 'abc'}
+    query_string = event["queryStringParameters"]
     client = boto3.resource("dynamodb")
     db_table = client.Table(getenv("DB_TABLE_NAME"))
     try:
