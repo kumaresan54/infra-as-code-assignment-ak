@@ -1,6 +1,6 @@
 output "api_gateway_url" {
 
-  value       = aws_apigatewayv2_api.api.api_endpoint
+  value = aws_apigatewayv2_api.api.api_endpoint
 }
 
 output "dynamodb_table_arn" {

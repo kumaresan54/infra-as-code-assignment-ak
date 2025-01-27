@@ -16,12 +16,12 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_exec_role.arn
   handler       = each.value.handler
   filename      = archive_file.lambda_zip[each.key].output_path
-  timeout       = 10   
+  timeout       = 10
 
   environment {
     variables = {
       DB_TABLE_NAME = aws_dynamodb_table.users.name
-      WEBSITE_S3 = aws_s3_bucket.my_bucket.bucket
+      WEBSITE_S3    = aws_s3_bucket.my_bucket.bucket
     }
   }
 

@@ -13,7 +13,7 @@ locals {
     }
   }
   s3_files = {
-    "index.html"  = "../files/index.html"  
-    "error.html"  = "../files/error.html"  
+    "index.html" = "../files/index.html"
+    "error.html" = "../files/error.html"
   }
 }
