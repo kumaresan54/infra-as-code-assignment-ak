@@ -13,7 +13,7 @@ def handler(event, context):
         response = db_table.put_item(Item=query_string)
         return {
         'statusCode': 200,
-        'body': json.dumps('User verification successful!')
+        'body': json.dumps('Registered User Successfully')
         }
     except Exception as error_details:
         print(error_details)

@@ -50,6 +50,28 @@ resource "aws_iam_role_policy_attachment" "function_logging_policy_attachment" {
   policy_arn = aws_iam_policy.function_logging_policy.arn
 }
 
+
+resource "aws_iam_policy" "lambda_s3_access_policy" {
+  name        = "LambdaS3AccessPolicy"
+  description = "Policy that allows Lambda function to get objects from S3"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "s3:GetObject"
+        Resource = "arn:aws:s3:::my-unique-bucket-name-ak/*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_s3_policy_attachment" {
+  policy_arn = aws_iam_policy.lambda_s3_access_policy.arn
+  role       = aws_iam_role.lambda_exec_role.id
+}
+
+
 # IAM policy for Lambda functions to access DynamoDB
 resource "aws_iam_role_policy" "lambda_policy" {
   name   = "LambdaDynamoDBPolicy"
@@ -97,7 +119,7 @@ resource "archive_file" "lambda_zip" {
 
   type        = "zip"
   source_file = each.value.filename
-  output_path = "${path.module}/lambda/${each.key}.zip"  # Ensure it's in the correct path
+  output_path = "${path.module}/lambda/${each.key}.zip"
 }
 
 # Create Lambda functions from zip archives
@@ -109,16 +131,17 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_exec_role.arn
   handler       = each.value.handler
   filename      = archive_file.lambda_zip[each.key].output_path
+  timeout       = 10   
 
   environment {
     variables = {
-      DYNAMODB_TABLE = aws_dynamodb_table.users.name
+      DB_TABLE_NAME = aws_dynamodb_table.users.name
+      WEBSITE_S3 = aws_s3_bucket.my_bucket.bucket
     }
   }
-   # Ensure the Lambda function depends on the zip file being created
+
   depends_on = [archive_file.lambda_zip]
 
-  # Compute the source code hash from the .zip file
   source_code_hash = archive_file.lambda_zip[each.key].output_base64sha256
 
 }
@@ -182,4 +205,34 @@ resource "aws_lambda_permission" "lambda_permission" {
 output "api_gateway_url" {
   description = "API Gateway URL"
   value       = aws_apigatewayv2_api.api.api_endpoint
+}
+
+# Output the ARN for DynamoDB, S3, and API Gateway
+output "dynamodb_table_arn" {
+  value = aws_dynamodb_table.users.arn
+}
+
+output "s3_bucket_arn" {
+  value = aws_s3_bucket.my_bucket.arn
+}
+
+# Create an S3 Bucket
+resource "aws_s3_bucket" "my_bucket" {
+  bucket = "my-unique-bucket-name-ak" 
+}
+
+# Define the files to be uploaded to the S3 bucket
+locals {
+  s3_files = {
+    "index.html"  = "files/index.html"  
+    "error.html"  = "files/error.html"  
+  }
+}
+
+resource "aws_s3_object" "website_files" {
+  for_each = local.s3_files
+
+  bucket = aws_s3_bucket.my_bucket.bucket
+  key    = each.key    
+  source = each.value 
 }
