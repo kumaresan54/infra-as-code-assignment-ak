@@ -69,7 +69,9 @@ resource "aws_iam_policy" "github_actions_policy" {
           "iam:ListPolicyVersions",
           "iam:PassRole",
           "iam:GetRolePolicy",
+          "iam:DetachRolePolicy",
           "iam:DeleteRolePolicy",
+          "iam:DetachRolePolicy",
           "logs:CreateLogGroup",
           "logs:DescribeLogGroups",
           "logs:ListTagsForResource",
@@ -82,7 +84,8 @@ resource "aws_iam_policy" "github_actions_policy" {
           "lambda:GetFunctionCodeSigningConfig",
           "lambda:AddPermission",
           "lambda:GetPolicy",
-          "lambda:RemovePermission"
+          "lambda:RemovePermission",
+          "apigateway:DELETE"
 
 
         ]
