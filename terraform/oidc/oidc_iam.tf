@@ -29,9 +29,23 @@ resource "aws_iam_policy" "github_actions_policy" {
     Statement = [
       {
         Action = [
+          "s3:CreateBucket",
           "s3:PutObject",
           "ec2:Describe*",
-          "ec2:TerminateInstances"
+          "ec2:TerminateInstances",
+          "apigateway:POST",
+          "apigateway:GET",
+          "dynamodb:CreateTable",
+          "dynamodb:DescribeTable",
+          "dynamodb:ListTables",
+          "dynamodb:PutItem",
+          "dynamodb:GetItem",
+          "dynamodb:UpdateTable",
+          "iam:CreateRole",
+          "iam:AttachRolePolicy",
+          "iam:CreatePolicy",
+          "iam:AttachRolePolicy",
+          "logs:CreateLogGroup",
         ]
         Effect   = "Allow"
         Resource = "*"
