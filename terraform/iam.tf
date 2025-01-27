@@ -1,6 +1,6 @@
 # IAM role for Lambda execution
 resource "aws_iam_role" "lambda_exec_role" {
-  name = "LambdaExecutionRole"
+  name = "LambdaExecutionRole-${var.prefix}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -18,7 +18,7 @@ resource "aws_iam_role" "lambda_exec_role" {
 }
 
 resource "aws_iam_policy" "function_logging_policy" {
-  name = "function-logging-policy"
+  name = "function-logging-policy-${var.prefix}"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -41,7 +41,7 @@ resource "aws_iam_role_policy_attachment" "function_logging_policy_attachment" {
 
 
 resource "aws_iam_policy" "lambda_s3_access_policy" {
-  name        = "LambdaS3AccessPolicy"
+  name        = "LambdaS3AccessPolicy-${var.prefix}"
   description = "Policy that allows Lambda function to get objects from S3"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -49,7 +49,7 @@ resource "aws_iam_policy" "lambda_s3_access_policy" {
       {
         Effect   = "Allow"
         Action   = "s3:GetObject"
-        Resource = "arn:aws:s3:::my-unique-bucket-name-ak/*"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.my_bucket.bucket}/*"
       }
     ]
   })
@@ -63,7 +63,7 @@ resource "aws_iam_role_policy_attachment" "lambda_s3_policy_attachment" {
 
 # IAM policy for Lambda functions to access DynamoDB
 resource "aws_iam_role_policy" "lambda_policy" {
-  name = "LambdaDynamoDBPolicy"
+  name = "LambdaDynamoDBPolicy-${var.prefix}"
   role = aws_iam_role.lambda_exec_role.id
   policy = jsonencode({
     Version = "2012-10-17"

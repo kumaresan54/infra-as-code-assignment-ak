@@ -1,5 +1,5 @@
 resource "aws_iam_role" "github_actions_role" {
-  name = "GitHubActionsRole"
+  name = "GitHubActionsRole-${var.prefix}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -22,7 +22,7 @@ resource "aws_iam_role" "github_actions_role" {
 
 
 resource "aws_iam_policy" "github_actions_policy" {
-  name        = "GitHubActionsPolicy"
+  name        = "GitHubActionsPolicy-${var.prefix}"
   description = "Policy for GitHub Actions to deploy infrastructure"
   policy = jsonencode({
     Version = "2012-10-17"
