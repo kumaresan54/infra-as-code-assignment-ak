@@ -3,3 +3,7 @@ variable "region" {
   default = "ap-south-1"
 }
 
+variable "prefix" {
+  type = string
+  default = "ak"
+}

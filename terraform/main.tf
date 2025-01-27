@@ -1,6 +1,6 @@
 # DynamoDB table for user data
 resource "aws_dynamodb_table" "users" {
-  name           = "Users"
+  name           = "users-${var.prefix}"
   billing_mode   = "PAY_PER_REQUEST"
   hash_key       = "user"
   attribute {
@@ -102,12 +102,12 @@ locals {
   lambda_functions = {
     "register_user" = {
       "handler"  = "register_user.handler",
-      "filename" = "lambda/register_user.py",
+      "filename" = "../lambda/register_user.py",
       "route"    = "/register"
     },
     "verify_user" = {
       "handler"  = "verify_user.handler",
-      "filename" = "lambda/verify_user.py",
+      "filename" = "../lambda/verify_user.py",
       "route"    = "/"
     }
   }
@@ -119,14 +119,14 @@ resource "archive_file" "lambda_zip" {
 
   type        = "zip"
   source_file = each.value.filename
-  output_path = "${path.module}/lambda/${each.key}.zip"
+  output_path = "../lambda/${each.key}.zip"
 }
 
 # Create Lambda functions from zip archives
 resource "aws_lambda_function" "lambda" {
   for_each = local.lambda_functions
 
-  function_name = "${each.key}"
+  function_name = "${each.key}-${var.prefix}"
   runtime       = "python3.8"
   role          = aws_iam_role.lambda_exec_role.arn
   handler       = each.value.handler
@@ -148,7 +148,7 @@ resource "aws_lambda_function" "lambda" {
 
 # API Gateway HTTP API
 resource "aws_apigatewayv2_api" "api" {
-  name          = "UserAPI"
+  name          = "UserAPI-${var.prefix}"
   protocol_type = "HTTP"
 }
 
@@ -184,7 +184,6 @@ resource "aws_apigatewayv2_deployment" "deployment" {
 resource "aws_apigatewayv2_stage" "stage" {
   api_id = aws_apigatewayv2_api.api.id
   name   = "$default"
-  # auto_deploy = true
 
   # Ensure the deployment is associated with the stage
   deployment_id = aws_apigatewayv2_deployment.deployment.id
@@ -218,14 +217,14 @@ output "s3_bucket_arn" {
 
 # Create an S3 Bucket
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "my-unique-bucket-name-ak" 
+  bucket = "my-assignment-bucket-${var.prefix}" 
 }
 
 # Define the files to be uploaded to the S3 bucket
 locals {
   s3_files = {
-    "index.html"  = "files/index.html"  
-    "error.html"  = "files/error.html"  
+    "index.html"  = "../files/index.html"  
+    "error.html"  = "../files/error.html"  
   }
 }
 
