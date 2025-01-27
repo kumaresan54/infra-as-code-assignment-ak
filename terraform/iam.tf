@@ -84,8 +84,8 @@ resource "aws_iam_role" "github_actions_role" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect    = "Allow"
-        Action    = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Action = "sts:AssumeRoleWithWebIdentity"
         Principal = {
           Federated = aws_iam_openid_connect_provider.github_oidc.arn
         }
@@ -103,7 +103,7 @@ resource "aws_iam_role" "github_actions_role" {
 resource "aws_iam_policy" "github_actions_policy" {
   name        = "GitHubActionsPolicy"
   description = "Policy for GitHub Actions to deploy infrastructure"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
