@@ -29,8 +29,16 @@ resource "aws_iam_policy" "github_actions_policy" {
     Statement = [
       {
         Action = [
-          "s3:CreateBucket",
-          "s3:PutObject",
+          "s3:*",
+          # "s3:GetObject",
+          # "s3:ListBucket",
+          # "s3:PutObject",
+          # "s3:GetBucketPolicy",
+          # "s3:GetBucketAcl",
+          # "s3:GetBucketCORS",
+          # "s3:GetBucketWebsite",
+          # "s3:GetBucketVersioning",
+          # "s3:GetAccelerateConfiguration",
           "ec2:Describe*",
           "ec2:TerminateInstances",
           "apigateway:POST",
@@ -42,14 +50,41 @@ resource "aws_iam_policy" "github_actions_policy" {
           "dynamodb:GetItem",
           "dynamodb:UpdateTable",
           "dynamodb:DescribeContinuousBackups",
+          "dynamodb:DescribeTimeToLive",
+          "dynamodb:ListTagsOfResource",
+          "dynamodb:DeleteTable",
           "iam:CreateRole",
           "iam:AttachRolePolicy",
           "iam:CreatePolicy",
           "iam:AttachRolePolicy",
           "iam:GetPolicy",
           "iam:GetRole",
+          "iam:ListRolePolicies",
+          "iam:GetPolicyVersion",
+          "iam:ListAttachedRolePolicies",
+          "iam:ListInstanceProfilesForRole",
+          "iam:DeletePolicy",
+          "iam:DeleteRole",
+          "iam:PutRolePolicy",
+          "iam:ListPolicyVersions",
+          "iam:PassRole",
+          "iam:GetRolePolicy",
+          "iam:DeleteRolePolicy",
           "logs:CreateLogGroup",
-          "logs:DescribeLogGroups"
+          "logs:DescribeLogGroups",
+          "logs:ListTagsForResource",
+          "logs:DeleteLogGroup",
+          "lambda:CreateFunction",
+          "lambda:DeleteFunction",
+          "lambda:GetFunction",
+          "lambda:ListFunctions",
+          "lambda:ListVersionsByFunction",
+          "lambda:GetFunctionCodeSigningConfig",
+          "lambda:AddPermission",
+          "lambda:GetPolicy",
+          "lambda:RemovePermission"
+
+
         ]
         Effect   = "Allow"
         Resource = "*"

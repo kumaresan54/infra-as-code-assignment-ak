@@ -59,6 +59,7 @@ jobs:
       - name: Terraform Destroy
         if: always()  # This ensures the destroy runs even if the apply fails
         run: terraform destroy -auto-approve
+        working-directory: terraform
 
   terraform_cleanup:
     runs-on: ubuntu-latest
@@ -75,6 +76,10 @@ jobs:
 
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
