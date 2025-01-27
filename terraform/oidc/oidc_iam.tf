@@ -41,11 +41,15 @@ resource "aws_iam_policy" "github_actions_policy" {
           "dynamodb:PutItem",
           "dynamodb:GetItem",
           "dynamodb:UpdateTable",
+          "dynamodb:DescribeContinuousBackups",
           "iam:CreateRole",
           "iam:AttachRolePolicy",
           "iam:CreatePolicy",
           "iam:AttachRolePolicy",
+          "iam:GetPolicy",
+          "iam:GetRole",
           "logs:CreateLogGroup",
+          "logs:DescribeLogGroups"
         ]
         Effect   = "Allow"
         Resource = "*"
