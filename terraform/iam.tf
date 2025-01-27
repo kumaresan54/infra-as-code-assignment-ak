@@ -91,7 +91,7 @@ resource "aws_iam_role" "github_actions_role" {
         }
         Condition = {
           StringEquals = {
-            "token.actions.githubusercontent.com:sub" = "repo:infra-as-code-assignment-ak:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" = "repo:kumaresan54/infra-as-code-assignment-ak:ref:refs/heads/main"
           }
         }
       }
