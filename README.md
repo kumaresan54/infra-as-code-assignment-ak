@@ -30,7 +30,7 @@ Repo contains following directory
 4. Once the resources are deployed, you will get the API Gateway URL, DynamoDB ARN and S3 bucket ARN as output and it get automatically destroyed after the deployment
 5. To destroy the resources create for oidc, run `terraform destroy`
 
-### API Details
+## API Details:
 - It serves as the first point-of-contact for the end-user, and it helps to redirect requests from the user based on the URL.
     - Requests to “/register” are forwarded to the Lambda which handles user registration
     - Requests to “/” are forwarded to the the Lambda which handles user verification

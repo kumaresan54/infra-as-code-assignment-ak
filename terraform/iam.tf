@@ -49,7 +49,7 @@ resource "aws_iam_policy" "lambda_s3_access_policy" {
       {
         Effect   = "Allow"
         Action   = "s3:GetObject"
-        Resource = "arn:aws:s3:::${aws_s3_bucket.my_bucket.bucket}/*"
+        Resource = "arn:aws:s3:::${module.s3_bucket.s3_bucket_id}/*"
       }
     ]
   })

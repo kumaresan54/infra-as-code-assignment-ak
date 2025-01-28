@@ -21,7 +21,7 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       DB_TABLE_NAME = aws_dynamodb_table.users.name
-      WEBSITE_S3    = aws_s3_bucket.my_bucket.bucket
+      WEBSITE_S3    = module.s3_bucket.s3_bucket_id
     }
   }
 

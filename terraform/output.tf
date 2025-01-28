@@ -8,5 +8,5 @@ output "dynamodb_table_arn" {
 }
 
 output "s3_bucket_arn" {
-  value = aws_s3_bucket.my_bucket.arn
+  value = module.s3_bucket.s3_bucket_arn
 }

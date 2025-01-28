@@ -56,6 +56,9 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: terraform
 
+      - name: Sleep for 10 seconds
+        run: sleep 10
+
       - name: Terraform Destroy
         if: always()  # This ensures the destroy runs even if the apply fails
         run: terraform destroy -auto-approve
